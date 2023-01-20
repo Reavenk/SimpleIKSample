@@ -53,25 +53,27 @@ public static class IKSys
         int nodeLinkCt = nodes.Count - 1;
         Transform endEffector = nodes[nodeLinkCt].transform;
         float rotAmt = rotPercent;
+        // For each iteration
         for(int i = 0; i < iterCt; ++i)
         { 
-            
+            // For each bone in the kinematic chain
             for(int nit = 0; nit < nodeLinkCt; ++nit)
             { 
-                // For each iteration of processing a joint, there are
-                // 3 significant references
-                // 1) The base position of the thing we're rotating
-                // 2) The end effector
-                // 3) The target
+                
                 Vector3 basePos = nodes[nit].transform.position;
                 Vector3 EFPos = endEffector.position;
+
+                // Calculate Root->EF
                 Vector3 baseToEF = EFPos - basePos;
+
+                // Calculate Root->Targ
                 Vector3 baseToTarg = targ - basePos;
 
-                // How much our joint needs to rotate to align
+                // Calculate rotation
                 Quaternion rotFromto = Quaternion.FromToRotation(baseToEF, baseToTarg);
-                Quaternion rotRestrained = Quaternion.Lerp(Quaternion.identity, rotFromto, rotAmt);
 
+                // Calculate partial rotation & apply partial rotation
+                Quaternion rotRestrained = Quaternion.Lerp(Quaternion.identity, rotFromto, rotAmt);
                 nodes[nit].transform.rotation = rotRestrained * nodes[nit].transform.rotation;
             }
 
