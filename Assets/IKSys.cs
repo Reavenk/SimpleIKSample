@@ -50,14 +50,14 @@ public static class IKSys
     public static void PerformIK_Cascade(List<Node> nodes, Vector3 targ, float rotPercent = 0.1f, bool incrRaiseRotAmt = true, int iterCt = 20, float eps = 0.001f)
     {
 
-        int nodeLinkCt = nodes.Count - 1;
-        Transform endEffector = nodes[nodeLinkCt].transform;
+        int lastNodeIdx = nodes.Count - 1;
+        Transform endEffector = nodes[lastNodeIdx].transform;
         float rotAmt = rotPercent;
         // For each iteration
         for(int i = 0; i < iterCt; ++i)
         { 
             // For each bone in the kinematic chain
-            for(int nit = 0; nit < nodeLinkCt; ++nit)
+            for(int nit = 0; nit < lastNodeIdx; ++nit)
             { 
                 
                 Vector3 basePos = nodes[nit].transform.position;
@@ -77,6 +77,8 @@ public static class IKSys
                 nodes[nit].transform.rotation = rotRestrained * nodes[nit].transform.rotation;
             }
 
+            // If increased greediness, increase to where rotation amount is 
+            // close to 1.0 on the final iteration.
             if(incrRaiseRotAmt)
                 rotAmt += (1.0f - rotPercent)/(iterCt - 1);
 
