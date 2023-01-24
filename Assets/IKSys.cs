@@ -45,7 +45,7 @@ public static class IKSys
     /// </param>
     /// <param name="iterCt">The number of times to loop through the joints.</param>
     /// <param name="eps">
-    /// An early exit distance. If the EF and target are at least this close, we don't need to continue the IK calculations.
+    /// An early exit distance. If the EE and target are at least this close, we don't need to continue the IK calculations.
     /// </param>
     public static void PerformIK_Cascade(List<Node> nodes, Vector3 targ, float rotPercent = 0.1f, bool incrRaiseRotAmt = true, int iterCt = 20, float eps = 0.001f)
     {
@@ -61,16 +61,16 @@ public static class IKSys
             { 
                 
                 Vector3 basePos = nodes[nit].transform.position;
-                Vector3 EFPos = endEffector.position;
+                Vector3 EEPos = endEffector.position;
 
-                // Calculate Root->EF
-                Vector3 baseToEF = EFPos - basePos;
+                // Calculate Bone->EE
+                Vector3 baseToEE = EEPos - basePos;
 
-                // Calculate Root->Targ
+                // Calculate Bone->Trg
                 Vector3 baseToTarg = targ - basePos;
 
                 // Calculate rotation
-                Quaternion rotFromto = Quaternion.FromToRotation(baseToEF, baseToTarg);
+                Quaternion rotFromto = Quaternion.FromToRotation(baseToEE, baseToTarg);
 
                 // Calculate partial rotation & apply partial rotation
                 Quaternion rotRestrained = Quaternion.Lerp(Quaternion.identity, rotFromto, rotAmt);
@@ -83,8 +83,8 @@ public static class IKSys
                 rotAmt += (1.0f - rotPercent)/(iterCt - 1);
 
             // Check if our IK is at a solution that's "good enough"
-            float distEFtoTarg = (endEffector.position - targ).magnitude;
-            if(distEFtoTarg <= eps)
+            float distEEtoTarg = (endEffector.position - targ).magnitude;
+            if(distEEtoTarg <= eps)
                 break;
 
         }
@@ -116,12 +116,12 @@ public static class IKSys
                 // 2) The end effector
                 // 3) The target
                 Vector3 basePos = nodes[nit].transform.position;
-                Vector3 EFPos = endEffector.position;
-                Vector3 baseToEF = EFPos - basePos;
+                Vector3 EEPos = endEffector.position;
+                Vector3 baseToEE = EEPos - basePos;
                 Vector3 baseToTarg = targ - basePos;
 
                 // How much our joint needs to rotate to align
-                Quaternion rotFromto = Quaternion.FromToRotation(baseToEF, baseToTarg);
+                Quaternion rotFromto = Quaternion.FromToRotation(baseToEE, baseToTarg);
                 rqmods[nit] = Quaternion.Lerp(Quaternion.identity, rotFromto, rotAmt);
             }
 
@@ -132,8 +132,8 @@ public static class IKSys
                 rotAmt += (1.0f - rotPercent) / (iterCt - 1);
 
             // Check if our IK is at a solution that's "good enough"
-            float distEFtoTarg = (endEffector.position - targ).magnitude;
-            if (distEFtoTarg <= eps)
+            float distEEtoTarg = (endEffector.position - targ).magnitude;
+            if (distEEtoTarg <= eps)
                 break;
 
         }

@@ -182,14 +182,14 @@ public class IKTester : MonoBehaviour
             IKSys.Node prevLast = this.ikNodes[this.ikNodes.Count - 1];
             this.UpdateDiamond(prevLast.transform.gameObject, prevLast.len);
 
-            // Capture the last item (previously the EF) and set it up to be a joint,
-            // and then add another node as the new EF
-            GameObject newEF = new GameObject("Node");
-            newEF.transform.SetParent(prevLast.transform);
-            newEF.transform.localRotation = Quaternion.identity;
-            newEF.transform.localPosition = new Vector3(0.0f, 0.0f, prevLast.len);
+            // Capture the last item (previously the EE) and set it up to be a joint,
+            // and then add another node as the new EE
+            GameObject newEE = new GameObject("Node");
+            newEE.transform.SetParent(prevLast.transform);
+            newEE.transform.localRotation = Quaternion.identity;
+            newEE.transform.localPosition = new Vector3(0.0f, 0.0f, prevLast.len);
             //
-            this.ikNodes.Add(new IKSys.Node(newEF.transform, defDiamondLen));
+            this.ikNodes.Add(new IKSys.Node(newEE.transform, defDiamondLen));
         }
     }
 
